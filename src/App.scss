@@ -1,0 +1,161 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+svg {
+  cursor: pointer;
+}
+
+div.header-styles{
+  display: flex; 
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 10px;
+  background-color: #fe9b19;
+  position: fixed;
+  width: 100%;
+
+  h1 {
+    color: white;
+  }
+
+
+  button {
+    padding: 15px 5px;
+    margin: 0px;
+    border-radius: 5px;
+    line-height: 0px;
+    // height: 10px;
+    width: 150px;
+  }
+}
+
+div.hero-banner {
+  display: flex;
+  flex-direction: row; 
+  justify-content: space-between;
+  align-items: center;
+  height: 500px; 
+  padding: 0px 35px;
+  margin-bottom: 20px;
+  background-color: bisque;
+
+  h1 {
+    font-size: 50px;
+    line-height: 55px;
+    color: #fe9b19;
+  }
+}
+
+table.content {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-weight: 0.9em;
+  min-width: 400px;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);
+
+  thead tr {
+    background-color: #0057b1;
+    color: white;
+    text-align: left;
+    font-weight: bold;
+  }
+  th, td{
+    padding: 10px 15px;
+  }
+
+  tbody {
+  
+    tr {
+      border-bottom: 1px solid #dddddd;
+    }
+    tr:nth-of-type(even) {
+      background-color: #f3f3f3;
+    }
+    tr:last-of-type {
+      border-bottom: 2px solid #0057b1;
+    }
+  
+    tr:hover {
+      color: #0057b1;
+      // font-weight: bold;
+    }
+
+  } 
+}
+
+div.table-heading-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+
+  button{
+    background-color: #0057b1;
+    padding: 10px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    width: 140px;
+  }
+}
+
+
+span.close-btn{
+  color: red;
+  position: relative;
+  top: 0;
+  left: 208px;
+  /* background-color: blue; */
+  padding: 8px;
+  font-size: 23px;
+}
+
+div.form-entry{
+  margin-top: 10px; 
+  border: solid 2px;
+  border-radius: 5px;
+  max-width: 20rem;
+  padding: 5px;
+}
