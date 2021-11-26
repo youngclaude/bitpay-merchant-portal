@@ -1,11 +1,8 @@
 import React,{useEffect, useRef, useState} from 'react'
-import logo from './logo.svg';
 import './styles/App.scss';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useSelector, useDispatch } from 'react-redux'
-import { decrement, increment } from './redux/counterSlice'
 import { showMessage } from './redux/notificationsSlice';
 
 import { FaEdit,  FaTrashAlt, FaWindowClose, FaPlusSquare} from 'react-icons/fa';
@@ -92,7 +89,7 @@ function App() {
       dispatch(showMessage("Added New Invoice!"))
 
     } else {
-      const tempIndexToEdit =  tempMerchantInvoiceData.findIndex(invoiceData => invoiceData.id == activeInvoice.id)
+      const tempIndexToEdit =  tempMerchantInvoiceData.findIndex(invoiceData => invoiceData.id === activeInvoice.id)
       console.log({tempIndexToEdit});
       tempMerchantInvoiceData[tempIndexToEdit] = activeInvoice;
       setFormMode('create')
@@ -107,7 +104,7 @@ function App() {
 
     const tempActiveInvoice = {...merchantInvoiceData[index]}
 
-    if (tempActiveInvoice.id == null){
+    if (tempActiveInvoice.id === null){
       tempActiveInvoice.id = generateInvoiceId();
     }
 
@@ -126,18 +123,6 @@ function App() {
     dispatch(showMessage("Delete successful.."))
   }
 
-
-
-  // modes: 'create', 'edit', 'default'
-  const getLivePricesForAllCurrencies = () => {
-    fetch('https://bitpay.com/api/rates/BTC')
-      .then(response => response.json())
-      .then(data => {
-        setFetchedCurrenciesInBtc(data);
-        dispatch(showMessage("PRICES UPDATE"));
-      } )
-      .catch(error => console.log({error}));
-  }
 
   useEffect(() => {
     setMerchantInvoiceData(merchantInvoiceDataConst)    
@@ -179,24 +164,23 @@ function App() {
   }, [reduxValue])
   
 
-  const clearTimer = () => {
-      // timerId.current = null;
-      clearInterval(timerId.current);
-      console.log('cleared!', timerId.current);
-  }
+  // const clearTimer = () => {
+  //     clearInterval(timerId.current);
+  //     console.log('cleared!', timerId.current);
+  // }
 
 
   const findCurrentPrice = (symbol)=> {
     let result = 0;
     if (fetchedCurrenciesInBtc.length > 2){
-      const currencyObj =  fetchedCurrenciesInBtc.find(currencies => currencies.code == symbol);
+      const currencyObj =  fetchedCurrenciesInBtc.find(currencies => currencies.code === symbol);
       result = currencyObj.rate;
     }
     return result;
   }
 
   const handleCreateInvoiceClick = () => {
-    if (formMode != 'create'){
+    if (formMode !== 'create'){
       setFormMode('create')
     }
   }
