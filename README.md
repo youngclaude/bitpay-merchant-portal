@@ -2,6 +2,8 @@
 
 This project was commissioned as an a interview challenge to asses my technical ability. 
 
+Live like link [HERE](http://rc-bitpay-merchant.s3-website-us-east-1.amazonaws.com/)
+
 ## Requirements
 
 Required:
