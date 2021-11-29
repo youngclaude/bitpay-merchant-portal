@@ -125,13 +125,11 @@ div.table-heading-section {
 
 
 span.close-btn{
-  color: red;
-  position: relative;
-  top: 0;
-  left: 208px;
-  /* background-color: blue; */
-  padding: 8px;
+  align-self: inherit;
+  margin: 0px;
   font-size: 23px;
+  padding: 0px;
+  height: 23px;
 }
 
 div.form-entry{
@@ -139,12 +137,24 @@ div.form-entry{
   // border: solid 2px;
   border-radius: 5px;
   max-width: 20rem;
-  padding: 55px;
   box-shadow: 0 0 20px rgba(0,0,0,0.15);
+
+  .invoice-header{
+    height: 50px;
+    background: linear-gradient(45deg, #4c51fb, #242afb,  $base-color);
+    display: flex;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: space-around;
+    color: white;
+  }
+  .invoice-body{
+    padding: 25px 55px;
+  }
 
   h3 {
     text-align: left;
-    width: 100%;
   }
 
   .form-label{
@@ -159,7 +169,8 @@ div.form-entry{
   button {
     width: 100%;
     text-align: center;
-    background-color: $base-color;
+    background-color: #34cd69;
+    border: none;
     // background: linear-gradient(red, orange);
     
     h3 {

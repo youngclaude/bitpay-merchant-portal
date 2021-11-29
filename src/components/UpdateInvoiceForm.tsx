@@ -15,10 +15,13 @@ interface Props {
 export const UpdateInvoiceForm: FC<Props> = (props : Props) => {
     return (
         <div className="form-entry">
-          <span className="close-btn" onClick={props.handleFormClose}><FaWindowClose /></span>
+          <div className="invoice-header">
+            <h3> {props.formMode === 'create' ? <span>Add new</span> : <span>Edit</span> } Invoice</h3>
+            <span className="close-btn" onClick={props.handleFormClose}><FaWindowClose /></span>
 
-          <h3> {props.formMode === 'create' ? <span>Add new</span> : <span>Edit</span> } Invoice</h3>
-          <hr />
+          </div>
+
+          <div className="invoice-body">
 
           <p className="form-label">Merchant Name</p>
           <form onSubmit={props.handleSubmitActiveForm}>
@@ -52,7 +55,10 @@ export const UpdateInvoiceForm: FC<Props> = (props : Props) => {
                 <h3> {props.formMode === 'create' ? <span>Submit</span> : <span>Update</span> } </h3>
               </button>
             </div>
+
           </form>
+          </div>
+
         </div>
     )
 }
