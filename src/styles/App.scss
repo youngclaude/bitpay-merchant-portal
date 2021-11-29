@@ -1,3 +1,5 @@
+$base-color: #0057b1;
+
 svg {
   cursor: pointer;
 }
@@ -15,23 +17,30 @@ div.header-styles{
 
   h1 {
     color: #1a4d80;
+    display: flex;
+    align-items: center;
   }
 
 
   button {
-    padding: 15px 5px;
+    padding: 20px 8px;
     margin: 0px;
-    border-radius: 5px;
+    border-radius: 8px;
     line-height: 0px;
-    // height: 10px;
     width: 150px;
+    // background: transparent;
+    border: none;
+    font-size: 15px;
+    color: white;
+    // background: linear-gradient(#76757a, #7983ee, $base-color);
+    background: linear-gradient(to right, #0083b0, $base-color);
   }
 }
 
 div.hero-banner {
   display: flex;
   flex-direction: row; 
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   height: 500px; 
   padding: 0px 35px;
@@ -54,7 +63,7 @@ table.content {
   box-shadow: 0 0 20px rgba(0,0,0,0.15);
 
   thead tr {
-    background-color: #0057b1;
+    background-color: $base-color;
     color: white;
     text-align: left;
     font-weight: bold;
@@ -72,11 +81,11 @@ table.content {
       background-color: #f3f3f3;
     }
     tr:last-of-type {
-      border-bottom: 2px solid #0057b1;
+      border-bottom: 2px solid $base-color;
     }
   
     tr:hover {
-      color: #0057b1;
+      color: $base-color;
       // font-weight: bold;
     }
 
@@ -97,7 +106,7 @@ div.table-heading-section {
   width: 70%;
 
   button{
-    background-color: #0057b1;
+    background-color: $base-color;
     padding: 10px;
     color: #fff;
     border: none;
@@ -106,6 +115,11 @@ div.table-heading-section {
     display: flex;
     justify-content: space-between;
     width: 140px;
+  }
+
+  h2 {
+    margin: 0px;
+    padding: 0px;
   }
 }
 
@@ -122,10 +136,38 @@ span.close-btn{
 
 div.form-entry{
   margin-top: 10px; 
-  border: solid 2px;
+  // border: solid 2px;
   border-radius: 5px;
   max-width: 20rem;
-  padding: 5px;
+  padding: 55px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);
+
+  h3 {
+    text-align: left;
+    width: 100%;
+  }
+
+  .form-label{
+    padding: 0px;
+    margin: 0px;
+  }
+  input, select {
+    margin-bottom: 15px;
+    width: 100%;
+    padding: 5px;
+  }
+  button {
+    width: 100%;
+    text-align: center;
+    background-color: $base-color;
+    // background: linear-gradient(red, orange);
+    
+    h3 {
+      text-align: center;
+      color: #fff;
+      font-family: 'Arial';
+    }
+  }
 }
 
 footer {

@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { FC } from 'react'
+import { FaAlgolia} from 'react-icons/fa';
 
-function Navigation() {
+
+const Navigation: FC = ()=> {
     return (
         <div className="header-styles">
-          <h1>BitpayMerchant</h1>
+          <h1><FaAlgolia />Bitpay - Merchant</h1>
           <div>
             <button className="">Create Account</button>
           </div>

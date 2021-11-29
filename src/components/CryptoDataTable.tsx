@@ -1,22 +1,37 @@
-import React,{useEffect, useRef, useState} from 'react'
+import React, {ChangeEvent, FC, useEffect, useRef, useState} from 'react'
 import '../styles/App.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { useSelector, useDispatch } from 'react-redux'
-import { showMessage } from '../redux/notificationsSlice';
+import { fireNotif } from '../redux/notificationsSlice';
 
 import { FaEdit,  FaTrashAlt} from 'react-icons/fa';
 import CountUp from 'react-countup';
 import { fetchLatestPrices } from '../redux/cryptoPriceDataSlice';
 import { CryptoTableHeader } from './CryptoTableHeader';
 import { UpdateInvoiceForm } from './UpdateInvoiceForm';
+import { IMerchantInvoice, IBitPayCurencyObj } from '../interfaces'
 
-function CryptoDataTable() {
+interface IReduxState {
+  crypto: any;
+}
+
+const initialActiveInvoice : IMerchantInvoice = {
+  id: '2',
+  merchantName: 'tes',
+  itemName: 'test',
+  amountCharged: '0',
+  purchaseCurrency: 'ETH',
+  defiValueToFiat: '0',
+  amountOwed: '0'
+}
+
+const CryptoDataTable:FC = () => {
   const dispatch = useDispatch()
-  const reduxValue = useSelector((state) => state.crypto.fetchedCurrenciesInBtc)
-  const [merchantInvoiceData, setMerchantInvoiceData] = useState([])
+  const receivedCurrencyData = useSelector((state: IReduxState) => state.crypto.fetchedCurrenciesInBtc)
+  const [merchantInvoiceData, setMerchantInvoiceData] = useState<IMerchantInvoice[]>([])
 
-  const generateInvoiceId = () => {
+  const generateInvoiceId = (): number => {
     const usedIds = merchantInvoiceData.map(invoice => invoice.id);
 
     let newId = Math.floor(Math.random() * 500)
@@ -26,15 +41,15 @@ function CryptoDataTable() {
     }
 
     return newId;
-  // think about populating these fields on the form submission side
   }
   // think about populating these fields on the form submission side
-  const [activeInvoice, setActiveInvoice] = useState({});
-  const [fetchedCurrenciesInBtc, setFetchedCurrenciesInBtc] = useState([])
+  const [activeInvoice, setActiveInvoice] = useState<IMerchantInvoice>(initialActiveInvoice);
+  const [fetchedCurrenciesInBtc, setFetchedCurrenciesInBtc] = useState<IBitPayCurencyObj[]>([])
   const [formMode, setFormMode] = useState('default')
-  const timerId = useRef(null)
+  const timerId = useRef<number>()
+  const [requestInterval, setRequestInterval] = useState(30000)
 
-  const merchantInvoiceDataConst = [
+  const merchantInvoiceDataConst : IMerchantInvoice[] = [
     {
       id: 214,
       merchantName: 'ShirtTown',
@@ -64,17 +79,19 @@ function CryptoDataTable() {
     }
   ] 
 
-  const handleUpdateActiveForm = (e) =>{
-    const {name, value} = e.target;
+  const handleUpdateActiveForm = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>): void =>{
+    const {name , value} = e?.target;
     console.log(name, value);
 
-    const tempActiveInvoice = {...activeInvoice}
-    tempActiveInvoice[name] = value;
+    let tempActiveInvoice: IMerchantInvoice;
+
+    tempActiveInvoice = {...activeInvoice}
+    tempActiveInvoice[name as keyof IMerchantInvoice] = value ;
     setActiveInvoice(tempActiveInvoice)
   } 
 
   // update the merchant invoice data table with the activeInvoice fields
-  const handleSubmitActiveForm = (e) =>{
+  const handleSubmitActiveForm = (e: any) =>{
     e.preventDefault()
     const {name, value} = e.target;
     console.log('e.target: ', e.target)
@@ -86,30 +103,34 @@ function CryptoDataTable() {
     if (formMode === 'create'){
       const tempActiveInvoice = {...activeInvoice}
 
-      tempActiveInvoice.amountCharged =  (activeInvoice.amountCharged * 1).toFixed(8)
+      tempActiveInvoice.amountCharged =  (Number(activeInvoice.amountCharged)).toFixed(8)
       tempMerchantInvoiceData.push(tempActiveInvoice);
-      dispatch(showMessage("Added New Invoice!"))
+      dispatch(fireNotif("Added New Invoice!"))
       setActiveInvoice({
         id: generateInvoiceId(),
         merchantName: 'GimmeGold',
         itemName: '',
-        amountCharged: 0,
+        amountCharged: '0',
         purchaseCurrency: 'ETH',
-        defiValueToFiat: 0,
-        amountOwed: 0
+        defiValueToFiat: '0',
+        amountOwed: '0'
       })
     } else {
-      const tempIndexToEdit =  tempMerchantInvoiceData.findIndex(invoiceData => invoiceData.id === activeInvoice.id)
-      console.log({tempIndexToEdit});
-      tempMerchantInvoiceData[tempIndexToEdit] = activeInvoice;
-      setFormMode('create')
-      dispatch(showMessage("Edit successful!"))
-    }
+      const indexToUpdate =  tempMerchantInvoiceData.findIndex(invoiceData => invoiceData.id === activeInvoice.id)
+      console.log({indexToUpdate});
 
+      const tempActiveInvoice = {...activeInvoice}
+      tempActiveInvoice.amountCharged =  (Number(tempActiveInvoice.amountCharged)).toFixed(8)
+
+      tempMerchantInvoiceData[indexToUpdate] = tempActiveInvoice;
+      dispatch(fireNotif("Edit successful!"))
+    }
+    
+    handleFormClose()
     setMerchantInvoiceData(tempMerchantInvoiceData)
   } 
 
-  const handleEditClick = index => {
+  const handleEditClick = (index: number) => {
     console.log('edit clicked for index: ', index);
 
     const tempActiveInvoice = {...merchantInvoiceData[index]}
@@ -120,17 +141,17 @@ function CryptoDataTable() {
 
     setActiveInvoice(tempActiveInvoice)
     setFormMode('edit')
-    dispatch(showMessage("Invoice loaded.."))
+    dispatch(fireNotif("Invoice loaded.."))
   }
 
-  const handleDeleteClick = index => {
+  const handleDeleteClick = (index: number) => {
     console.log('delete clicked for index: ', index);
 
     const tempMerchantInvoiceData = [...merchantInvoiceData]
 
     tempMerchantInvoiceData.splice(index, 1)
     setMerchantInvoiceData(tempMerchantInvoiceData)
-    dispatch(showMessage("Delete successful.."))
+    dispatch(fireNotif("Delete successful.."))
   }
 
 
@@ -145,20 +166,20 @@ function CryptoDataTable() {
       defiValueToFiat: 0,
       amountOwed: 0
     })
-    // dispatch(showMessage('hello world'))
+    // dispatch(fireNotif('hello world'))
 
     dispatch(fetchLatestPrices())
 
-    console.log({reduxValue});
+    console.log({receivedCurrencyData: receivedCurrencyData});
     console.log('- first call -');
     
     // getLivePricesForAllCurrencies()
     
 
-    timerId.current = setInterval(()=>{
+    timerId.current = window.setInterval(()=>{
         console.log('updating all coin prices!', new Date());
         dispatch(fetchLatestPrices())
-    }, 30000)
+    }, requestInterval)
 
     return () => {
       // timerId.current = null;
@@ -167,37 +188,47 @@ function CryptoDataTable() {
     }
   }, [])
 
+  // Update the UI when new data is received
   useEffect(() => {
-    console.log({reduxValue});
-    setFetchedCurrenciesInBtc(reduxValue);
+    setFetchedCurrenciesInBtc(receivedCurrencyData);
+  }, [receivedCurrencyData])
 
-  }, [reduxValue])
+  const handleIntervalUpdate =  (e: ChangeEvent<HTMLSelectElement>): void => {
+    const newInterval = Number(e?.target.value)
+    setRequestInterval(newInterval)
+    dispatch(fireNotif("Request interval updated..."))
+
+    clearInterval(timerId.current);
+    timerId.current = window.setInterval(()=>{
+        console.log('updating all coin prices!', new Date());
+        dispatch(fetchLatestPrices())
+    }, newInterval)
+
+  }
   
 
-  // const clearTimer = () => {
+  // const clearTimer = (): void=> {
   //     clearInterval(timerId.current);
   //     console.log('cleared!', timerId.current);
   // }
 
-
-  const findCurrentPrice = (symbol)=> {
-    let result = 0;
+  const findCurrentPrice = (symbol: string): number=> {
+    let result: any = 0;
     if (fetchedCurrenciesInBtc.length > 2){
-      const currencyObj =  fetchedCurrenciesInBtc.find(currencies => currencies.code === symbol);
-      result = currencyObj.rate;
+      const currencyObj =  fetchedCurrenciesInBtc.find( (currencies: IBitPayCurencyObj) => currencies.code === symbol);
+      result = currencyObj?.rate;
     }
     return result;
   }
 
-  const handleCreateInvoiceClick = () => {
+  const handleCreateInvoiceClick = (): void => {
     if (formMode !== 'create'){
       setFormMode('create')
     }
   }
 
-  const handleFormClose = () => {
+  const handleFormClose = (): void=> {
       setFormMode('default')
-    
   }
 
 
@@ -205,7 +236,10 @@ function CryptoDataTable() {
     <div>
         <div >
             <div className="table-wrapper">
-                <CryptoTableHeader handleCreateInvoiceClick={handleCreateInvoiceClick} />
+                <CryptoTableHeader 
+                  handleCreateInvoiceClick={handleCreateInvoiceClick}
+                  handleIntervalUpdate={handleIntervalUpdate} 
+                  requestInterval={requestInterval}/>
                 <table className="content">
                     <thead>
                     <tr>
@@ -225,7 +259,7 @@ function CryptoDataTable() {
                     {merchantInvoiceData.map((invoiceData, index) => {
 
                     const calculatedCoinPrice = (findCurrentPrice('USD') / findCurrentPrice(invoiceData.purchaseCurrency)).toFixed(2)
-                    const amountOwed = (calculatedCoinPrice * invoiceData.amountCharged).toFixed(2)
+                    const amountOwed = (Number(calculatedCoinPrice) * Number(invoiceData.amountCharged)).toFixed(2)
             
                     return (
                         <tr>
@@ -235,7 +269,7 @@ function CryptoDataTable() {
                             <td>{invoiceData.amountCharged}</td>
                             <td>{invoiceData.purchaseCurrency}</td>
                             {/* <td>${invoiceData.defiValueToFiat}</td> */}
-                            <td>${<CountUp start={calculatedCoinPrice / 2} end={calculatedCoinPrice} duration={1}/> }</td>
+                            <td>${<CountUp start={Number(calculatedCoinPrice) / 2} end={Number(calculatedCoinPrice)} duration={1}/> }</td>
                             
                             <td>${amountOwed}</td>
                             <td style={{display: 'flex', justifyContent: 'space-around'}}> 
